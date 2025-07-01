@@ -1,4 +1,3 @@
-
 const config = {
   name: "اوامر",
   _name: {
