@@ -1,7 +1,7 @@
 const config = {
   name: "اوامر",
   _name: {
-    "ar_SY": "مساعدة"
+    "ar_SY": "الاوامر"
   },
   aliases: ["cmds", "commands"],
   version: "1.0.3",
@@ -12,19 +12,18 @@ const config = {
 
 const langData = {
   "ar_SY": {
-    "help.list": "{list}\n\n ➠ المجموع: {total} الاوامر\n ➠ يستخدم {syntax} [امر] لمزيد من المعلومات حول الأمر.",
+    "help.list": "{list}\n\n⇒ المجموع: {total} الاوامر\n⇒ يستخدم {syntax} [امر] لمزيد من المعلومات حول الأمر.",
     "help.commandNotExists": "امر {command} غير موجود.",
-    "help.commandDetails": `  ➠ اسم: {name}  ➠ اسم مستعار: {aliases}  ➠ وصف: {description}  ➠ استعمال: {usage}  ➠ الصلاحيات: {permissions}  ➠ فئة: {category}  ➠ وقت الانتظار: {cooldown}  ➠ المطور : راكو سان `,
+    "help.commandDetails": ` ⇒ اسم: {name} ⇒ اسم مستعار: {aliases} ⇒ وصف: {description} ⇒ استعمال: {usage} ⇒ الصلاحيات: {permissions} ⇒ فئة: {category} ⇒ وقت الانتظار: {cooldown} ⇒ المطور : راكو سان `,
     "0": "عضو",
     "1": "إدارة المجموعة",
     "2": "ادارة البوت",
-    "ADMIN": "مــطــور",
-    "GENERAL": "عـامــة",
-    "TOOL": "ادوات"
-    "AI": "زكــاء",
-    "MEDIA": "وســائــط",
-    "GROUP": "الـمـجـمـوعـة", 
-    "ECONOMY": "تـرفـيـه"
+    "ADMIN": "مطور",
+    "GENERAL": "عضو",
+    "TOOL": "ادوات",
+    "ECONOMY": "اقتصاد",
+    "MEDIA": "وسائط",
+    "GROUP": "مجموعة"
   }
 };
 
