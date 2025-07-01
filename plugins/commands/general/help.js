@@ -60,7 +60,7 @@ async function onCall({ message, args, getLang, userPermissions, prefix }) {
     }
 
     let list = Object.keys(commands)
-      .map(category => `❴ ${category} ❵\n${commands[category].join(" ↫\n ")}`)
+      .map(category => `❴ ${category} ❵\n${commands[category].join(" \n↫ ")}`)
       .join("\n\n");
 
     message.reply(getLang("help.list", { total: Object.values(commands).map(e => e.length).reduce((a, b) => a + b, 0), list, syntax: prefix }));
