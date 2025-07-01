@@ -12,9 +12,9 @@ const config = {
 
 const langData = {
   "ar_SY": {
-    "help.list": "{list}\n\n⇒ المجموع: {total} الاوامر\n⇒ يستخدم {syntax} [امر] لمزيد من المعلومات حول الأمر.",
+    "help.list": "{list}\n\n➜ المجموع: {total} الاوامر\n➜ يستخدم {syntax} [امر] لمزيد من المعلومات حول الأمر.",
     "help.commandNotExists": "امر {command} غير موجود.",
-    "help.commandDetails": ` ⇒ اسم: {name} ⇒ اسم مستعار: {aliases} ⇒ وصف: {description} ⇒ استعمال: {usage} ⇒ الصلاحيات: {permissions} ⇒ فئة: {category} ⇒ وقت الانتظار: {cooldown} ⇒ المطور : راكو سان `,
+    "help.commandDetails": ` ➜ اسم: {name} ➜ اسم مستعار: {aliases} ➜ وصف: {description} ➜ استعمال: {usage} ➜ الصلاحيات: {permissions} ➜ فئة: {category} ➜ وقت الانتظار: {cooldown} ➜ المطور : راكو سان `,
     "0": "عضو",
     "1": "إدارة المجموعة",
     "2": "ادارة البوت",
@@ -60,7 +60,7 @@ async function onCall({ message, args, getLang, userPermissions, prefix }) {
     }
 
     let list = Object.keys(commands)
-      .map(category => `⌈ ${category} ⌋\n${commands[category].join(" • ")}`)
+      .map(category => `❴ ${category} ❵\n${commands[category].join(" ↫\n ")}`)
       .join("\n\n");
 
     message.reply(getLang("help.list", { total: Object.values(commands).map(e => e.length).reduce((a, b) => a + b, 0), list, syntax: prefix }));
