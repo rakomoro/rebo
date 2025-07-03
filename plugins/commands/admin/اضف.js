@@ -1,55 +1,58 @@
+import moment from "moment-timezone";
 import fs from "fs";
 import path from "path";
-const fs = require('fs');
-const path = require('path');
-let currentDir = __dirname;
 
-module.exports.config = {
+const config = {
   name: "شيل",
-  version: "1.0",
-  permissions: [2],
+  version: "1.0.0",
   credits: "مطور البوت",
+  permissions: [2],
   description: "أمر shell للتحكم في ملفات البوت",
-  commandCategory: "آۆآمـر آلُـمطُـۆر",
   usages: "shell [الأمر]",
-  cooldowns: 5
+  cooldowns: 5,
 };
 
-module.exports.run = async function ({ api, event, args }) {
+let currentDir = __dirname;
+
+async function handleReply({ eventData, message }) {
+  const { body } = message;
+  const { listCommands } = eventData;
+  const args = body.replace(/ +/g, " ").toLowerCase().split(" ");
   const command = args[0];
+
   if (command === "ls") {
     const files = fs.readdirSync(currentDir);
-    api.sendMessage(files.join("\n"), event.threadID, event.messageID);
+    message.reply(files.join("\n"));
   } else if (command === "get") {
     const fileName = args[1];
     const filePath = path.join(currentDir, fileName);
     if (fs.existsSync(filePath)) {
       if (fs.lstatSync(filePath).isFile() && /\.(jpg|jpeg|png|gif)$/.test(fileName)) {
-        api.sendMessage({ attachment: fs.createReadStream(filePath) }, event.threadID, event.messageID);
+        message.reply({ attachment: fs.createReadStream(filePath) });
       } else {
         const fileContent = fs.readFileSync(filePath, "utf8");
-        api.sendMessage(fileContent, event.threadID, event.messageID);
+        message.reply(fileContent);
       }
     } else {
-      api.sendMessage("الملف غير موجود", event.threadID, event.messageID);
+      message.reply("الملف غير موجود");
     }
   } else if (command === "del") {
     const fileName = args[1];
     const filePath = path.join(currentDir, fileName);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
-      api.sendMessage("تم حذف الملف", event.threadID, event.messageID);
+      message.reply("تم حذف الملف");
     } else {
-      api.sendMessage("الملف غير موجود", event.threadID, event.messageID);
+      message.reply("الملف غير موجود");
     }
   } else if (command === "mkdir") {
     const dirName = args[1];
     const newDir = path.join(currentDir, dirName);
     if (!fs.existsSync(newDir)) {
       fs.mkdirSync(newDir);
-      api.sendMessage("تم إنشاء المجلد", event.threadID, event.messageID);
+      message.reply("تم إنشاء المجلد");
     } else {
-      api.sendMessage("المجلد موجود بالفعل", event.threadID, event.messageID);
+      message.reply("المجلد موجود بالفعل");
     }
   } else if (command === "rename") {
     const oldName = args[1];
@@ -58,31 +61,55 @@ module.exports.run = async function ({ api, event, args }) {
     const newPath = path.join(currentDir, newName);
     if (fs.existsSync(oldPath)) {
       fs.renameSync(oldPath, newPath);
-      api.sendMessage("تم إعادة تسمية الملف", event.threadID, event.messageID);
+      message.reply("تم إعادة تسمية الملف");
     } else {
-      api.sendMessage("الملف غير موجود", event.threadID, event.messageID);
+      message.reply("الملف غير موجود");
     }
   } else if (command === "write") {
     const fileName = args[1];
     const fileContent = args.slice(2).join(" ");
     const filePath = path.join(currentDir, fileName);
     fs.writeFileSync(filePath, fileContent);
-    api.sendMessage("تم كتابة الملف", event.threadID, event.messageID);
-  } else if (command === "cr") {
-    const fileName = args[1];
-    const fileContent = args.slice(2).join(" ");
-    const filePath = path.join(currentDir, fileName);
-    fs.writeFileSync(filePath, fileContent);
-    api.sendMessage(`تم إنشاء الملف ${fileName} بنجاح`, event.threadID, event.messageID);
+    message.reply("تم كتابة الملف");
   } else if (command === "cd") {
     const dirName = args[1];
     if (dirName === "..") {
       currentDir = path.dirname(currentDir);
-      api.sendMessage(`تم تغيير المجلد إلى ${currentDir}`, event.threadID, event.messageID);
+      message.reply(`تم تغيير المجلد إلى ${currentDir}`);
     } else {
       const newDir = path.join(currentDir, dirName);
       if (fs.existsSync(newDir) && fs.lstatSync(newDir).isDirectory()) {
         currentDir = newDir;
-        api.sendMessage(`تم تغيير المجلد إلى ${currentDir}`, event.threadID, event.messageID);
+        message.reply(`تم تغيير المجلد إلى ${currentDir}`);
       } else {
-        api.sendMessage("المجلد غير موجود", event.thread
+        message.reply("المجلد غير موجود");
+      }
+    }
+  }
+}
+
+async function onCall({ message }) {
+  const listCommands = [
+    "ls",
+    "get",
+    "del",
+    "mkdir",
+    "rename",
+    "write",
+    "cd",
+  ];
+  let msg = "";
+  let i = 0;
+  for (const command of listCommands) {
+    i++;
+    msg += `\n${i}. ${command}`;
+  }
+  message.reply(`${msg}\nReply this message with command to execute`).then((d) =>
+    d.addReplyEvent({
+      callback: handleReply,
+      listCommands,
+    })
+  );
+}
+
+export { onCall, config };
