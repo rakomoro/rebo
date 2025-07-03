@@ -1,109 +1,78 @@
+import fs from "fs";
+import path from "path";
+
+const OWNER_ID = "61553754531086";
+
 const config = {
   name: "مشموش",
-  version: "1.1.0",
-  description: "تحدث مع نينو",
-  usage: "[text]",
+  version: "1.0.0",
+  description: "عرض كل ردود لوسي",
+  usage: "'الكل' أو سؤال موجود في الردود",
   cooldown: 3,
   permissions: [0, 1, 2],
-  credits: "XaviaTeam"
-}
+  credits: "TobySanchez",
+};
 
 const langData = {
-  "ar_SY": {
-    "on": "مشموش يعمل الآن 🙂",
-    "off": "مشموش متوقف الآن 😐",
-    "alreadyOn": "مشموش يعمل بالفعل 🙂",
-    "alreadyOff": "مشموش متوقف بالفعل 😐",
-    "missingInput": "الرجاء إدخال النص للتحدث مع مشموش 🤔",
-    "noResult": "مشموش لا يفهم ما تقول :(",
-    "error": "لقد حدث خطأ، رجاء أعد المحاولة لاحقا 🤕"
+  ar_SY: {
+    allResponsesHeader: "📦 كل الردود المحفوظة:",
+    noResponses: "ما في أي ردود محفوظة حالياً.",
+    notOwner: "الأمر ده مخصص لصاحب البوت فقط.",
+    missingInput: "أكتب حاجة علشان أرد 🐥",
+    noResult: "ما لقيت رد للكلمة دي 😕",
+  },
+};
+
+const dataPath = path.join(process.cwd(), "ninoData.json");
+
+function loadData() {
+  try {
+    if (!fs.existsSync(dataPath)) return {};
+    return JSON.parse(fs.readFileSync(dataPath, "utf8"));
+  } catch {
+    return {};
   }
 }
 
-const ninoData = require('./nino.json');
-
-function generateReply(input) {
-  const keywords = getKeywords(input);
-  const tone = getTone(input);
-  const reply = generateText(keywords, tone);
-  const sticker = generateSticker(tone);
-  return { reply, sticker };
+function getRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
-
-function getKeywords(input) {
-  const keywords = [];
-  const words = input.split(' ');
-  for (const word of words) {
-    if (ninoData.keywords.includes(word)) {
-      keywords.push(word);
-    }
-  }
-  return keywords;
-}
-
-function getTone(input) {
-  let tone = '';
-  if (input.includes('؟')) {
-    tone = 'question';
-  } else if (input.includes('!')) {
-    tone = 'excited';
-  } else {
-    tone = 'normal';
-  }
-  return tone;
-}
-
-function generateText(keywords, tone) {
-  let text = '';
-  switch (tone) {
-    case 'question':
-      text = ninoData.responses.question[Math.floor(Math.random() * ninoData.responses.question.length)].replace('{keyword}', keywords[0]);
-      break;
-    case 'excited':
-      text = ninoData.responses.excited[Math.floor(Math.random() * ninoData.responses.excited.length)].replace('{keyword}', keywords[0]);
-      break;
-    default:
-      text = ninoData.responses.normal[Math.floor(Math.random() * ninoData.responses.normal.length)].replace('{keyword}', keywords[0]);
-  }
-  return text;
-}
-
-function generateSticker(tone) {
-  let sticker = '';
-  switch (tone) {
-    case 'question':
-      sticker = '🤔';
-      break;
-    case 'excited':
-      sticker = '😄';
-      break;
-    default:
-      sticker = '😐';
-  }
-  return sticker;
-}
-
-let isActive = {};
 
 async function onCall({ message, args, getLang }) {
-  const input = args.join(" ");
+  const input = args.join(" ").trim();
+  const data = loadData();
+
+  // لو ما في كتابة
   if (!input) return message.reply(getLang("missingInput"));
-  if (input == "on") {
-    if (isActive[message.threadID]) return message.reply(getLang("alreadyOn"));
-    isActive[message.threadID] = true;
-    return message.reply(getLang("on"));
-  } else if (input == "off") {
-    if (!isActive[message.threadID]) return message.reply(getLang("alreadyOff"));
-    delete isActive[message.threadID];
-    return message.reply(getLang("off"));
+
+  // أمر الكل - فقط للمالك
+  if (input === "الكل") {
+    if (message.senderID !== OWNER_ID) {
+      return message.reply(getLang("notOwner"));
+    }
+
+    const keys = Object.keys(data);
+    if (keys.length === 0) return message.reply(getLang("noResponses"));
+
+    let reply = getLang("allResponsesHeader") + "\n\n";
+    for (const key of keys) {
+      reply += `📌 ${key}:\n`;
+      data[key].forEach((r, i) => {
+        reply += `   ${i + 1}. ${r}\n`;
+      });
+      reply += "\n";
+    }
+
+    return message.reply(reply.length > 1999 ? reply.slice(0, 1999) : reply);
   }
-  if (!isActive[message.threadID]) return;
-  const { reply, sticker } = generateReply(input);
-  return message.reply(reply + ' ' + sticker);
+
+  // الرد على سؤال عادي
+  if (!data[input]) return message.reply(getLang("noResult"));
+  return message.reply(getRandom(data[input]));
 }
 
 export default {
   config,
   langData,
-  onCall
-}
+  onCall,
+};
