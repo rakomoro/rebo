@@ -6,7 +6,7 @@ const langData = {
         "noResult": "Nino không hiểu bạn đang nói gì :("
     },
     "ar_SY": {
-        "noResult": "نينو لا تفهم ما تقول :("
+        "noResult": "مشموش لا تفهم ما تقول :("
     }
 }
 
