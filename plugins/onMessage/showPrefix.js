@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const langData = {
     "en_US": {
-        "prefix": `${global.config.NAME} 𝚙𝚛𝚎𝚏𝚒𝚡 𝚒𝚜: {prefix}`
+        "prefix": `${global.config.NAME} رمز البوت هو 🐢: {prefix}`
     }
 };
 
