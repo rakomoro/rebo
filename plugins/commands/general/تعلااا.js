@@ -1,45 +1,69 @@
+import fs from "fs";
+import path from "path";
+
 const config = {
   name: "احفظ",
-  aliases: ["teach"],
-  description: "تعليم نينو",
-  usage: "[type] [key] => [value]",
+  aliases: ["تعلم"],
+  description: "علم لوسي كيفية الكلام",
+  usage: "[سؤال] => [رد]",
   cooldown: 3,
   permissions: [0, 1, 2],
-  credits: "XaviaTeam",
-}
+  credits: "TobySanchez",
+};
 
 const langData = {
-  "ar_SY": {
-    "wrongSyntax": "بناء جملة خاطئ ، يرجى المحاولة مرة أخرى",
-    "missingInput": "بيانات مفقودة!",
-    "succeed": "نجح التدريس!",
-    "failed": "فشل التدريس!",
-    "error": "لقد حدث خطأ، رجاء أعد المحاولة لاحقا"
+  ar_SY: {
+    wrongSyntax: "الصيغة غلط. استعمل: السؤال => الرد",
+    missingInput: "السؤال أو الرد ناقص!",
+    succeed: "تم إضافة الرد ✅",
+    failed: "فشل الإضافة ❌",
+    error: "في مشكلة، حاول تاني", 
+  },
+};
+
+const dataPath = path.join(process.cwd(), "ninoData.json");
+
+function loadData() {
+  try {
+    if (!fs.existsSync(dataPath)) fs.writeFileSync(dataPath, "{}");
+    return JSON.parse(fs.readFileSync(dataPath, "utf8"));
+  } catch {
+    return {};
   }
 }
 
-const fs = require('fs');
-const ninoData = require('./nino.json');
+function saveData(data) {
+  try {
+    fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 async function onCall({ message, args, getLang }) {
-  const arrow = args.indexOf("=>");
-  if (arrow == -1) return message.reply(getLang("wrongSyntax"));
-  const type = args[0].toLowerCase();
-  if (!["question", "excited", "normal"].includes(type)) return message.reply(getLang("wrongSyntax"));
-  const key = args.slice(1, arrow).join(" ");
-  const value = args.slice(arrow + 1).join(" ");
+  const arrowIndex = args.indexOf("=>");
+  if (arrowIndex === -1) return message.reply(getLang("wrongSyntax"));
+
+  const key = args.slice(0, arrowIndex).join(" ").trim();
+  const value = args.slice(arrowIndex + 1).join(" ").trim();
+
   if (!key || !value) return message.reply(getLang("missingInput"));
 
-  if (!ninoData.responses) ninoData.responses = {};
-  if (!ninoData.responses[type]) ninoData.responses[type] = [];
-
-  ninoData.responses[type].push(value);
-  fs.writeFileSync('./nino.json', JSON.stringify(ninoData, null, 2));
-  return message.reply(getLang("succeed"));
+  try {
+    const data = loadData();
+    if (!data[key]) data[key] = [];
+    if (!data[key].includes(value)) data[key].push(value);
+    const saved = saveData(data);
+    if (saved) return message.reply(getLang("succeed"));
+    else return message.reply(getLang("failed"));
+  } catch (err) {
+    return message.reply(getLang("error"));
+  }
 }
 
 export default {
   config,
   langData,
-  onCall
-    }
+  onCall,
+};
