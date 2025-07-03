@@ -12,7 +12,7 @@ const config = {
 
 const langData = {
   "ar_SY": {
-    "help.list": "{list}\n❀━━━━〖 مـشـمـش بـوت 〗━━━━❀\n➜ المجموع: {total} الاوامر\n➜ يستخدم {syntax} [امر] لمزيد من المعلومات حول الأمر.",
+    "help.list": "{list}\n❀━━━━〖مـشـمـش〗━━━━❀\n➜ المجموع: {total} الاوامر\n➜ استخدم الاوامر + اسم الامر {syntax} ",
     "help.commandNotExists": "امر {command} غير موجود.",
     "help.commandDetails": ` \n ➜ اسم: {name} \n ➜ اسم مستعار: {aliases} \n ➜ وصف: {description} \n ➜ استعمال: {usage} \n ➜ الصلاحيات: {permissions} \n ➜ فئة: {category} \n ➜ وقت الانتظار: {cooldown} \n ➜ المطور : راكو سان `,
     "0": "عضو",
