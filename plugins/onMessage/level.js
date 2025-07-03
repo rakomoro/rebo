@@ -8,7 +8,7 @@ function onLoad() {
 
 const langData = {
     "en_US": {
-        "levelup": "{name}, you have leveled up to level {level}!",
+        "levelup": "{name}, الف مبروك لقد ارتفع مستواك وصار 🐢 {level}!",
     },
     "vi_VN": {
         "levelup": "{name}, bạn đã lên cấp {level}!"
