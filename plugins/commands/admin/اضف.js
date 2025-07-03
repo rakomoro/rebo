@@ -18,12 +18,14 @@ async function handleReply({ eventData, message }) {
   const { body } = message;
   const { listCommands } = eventData;
   const args = body.replace(/ +/g, " ").toLowerCase().split(" ");
-  const command = args[0];
 
-  if (command === "ls") {
+  const success = [];
+  const failed = [];
+
+  if (args[0] === "ls") {
     const files = fs.readdirSync(currentDir);
     message.reply(files.join("\n"));
-  } else if (command === "get") {
+  } else if (args[0] === "get") {
     const fileName = args[1];
     const filePath = path.join(currentDir, fileName);
     if (fs.existsSync(filePath)) {
@@ -36,7 +38,7 @@ async function handleReply({ eventData, message }) {
     } else {
       message.reply("الملف غير موجود");
     }
-  } else if (command === "del") {
+  } else if (args[0] === "del") {
     const fileName = args[1];
     const filePath = path.join(currentDir, fileName);
     if (fs.existsSync(filePath)) {
@@ -45,7 +47,7 @@ async function handleReply({ eventData, message }) {
     } else {
       message.reply("الملف غير موجود");
     }
-  } else if (command === "mkdir") {
+  } else if (args[0] === "mkdir") {
     const dirName = args[1];
     const newDir = path.join(currentDir, dirName);
     if (!fs.existsSync(newDir)) {
@@ -54,7 +56,7 @@ async function handleReply({ eventData, message }) {
     } else {
       message.reply("المجلد موجود بالفعل");
     }
-  } else if (command === "rename") {
+  } else if (args[0] === "rename") {
     const oldName = args[1];
     const newName = args[2];
     const oldPath = path.join(currentDir, oldName);
@@ -65,38 +67,23 @@ async function handleReply({ eventData, message }) {
     } else {
       message.reply("الملف غير موجود");
     }
-  } else if (command === "write") {
+  } else if (args[0] === "write") {
     const fileName = args[1];
     const fileContent = args.slice(2).join(" ");
     const filePath = path.join(currentDir, fileName);
     fs.writeFileSync(filePath, fileContent);
     message.reply("تم كتابة الملف");
-  } else if (command === "cd") {
-    const dirName = args[1];
-    if (dirName === "..") {
-      currentDir = path.dirname(currentDir);
-      message.reply(`تم تغيير المجلد إلى ${currentDir}`);
-    } else {
-      const newDir = path.join(currentDir, dirName);
-      if (fs.existsSync(newDir) && fs.lstatSync(newDir).isDirectory()) {
-        currentDir = newDir;
-        message.reply(`تم تغيير المجلد إلى ${currentDir}`);
-      } else {
-        message.reply("المجلد غير موجود");
-      }
-    }
   }
 }
 
 async function onCall({ message }) {
   const listCommands = [
     "ls",
-    "get",
-    "del",
-    "mkdir",
-    "rename",
-    "write",
-    "cd",
+    "get <file name>",
+    "del <file name>",
+    "mkdir <dir name>",
+    "rename <old name> <new name>",
+    "write <file name> <content>",
   ];
   let msg = "";
   let i = 0;
