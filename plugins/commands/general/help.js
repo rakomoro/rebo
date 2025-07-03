@@ -12,9 +12,9 @@ const config = {
 
 const langData = {
   "ar_SY": {
-    "help.list": "{list}\n\n➜ المجموع: {total} الاوامر\n➜ يستخدم {syntax} [امر] لمزيد من المعلومات حول الأمر.",
+    "help.list": "════════❍════════\n {list}\n\n➜ المجموع: {total} الاوامر\n➜ يستخدم {syntax} [امر] لمزيد من المعلومات حول الأمر.\n════════❍════════",
     "help.commandNotExists": "امر {command} غير موجود.",
-    "help.commandDetails": ` ➜ اسم: {name} ➜ اسم مستعار: {aliases} ➜ وصف: {description} ➜ استعمال: {usage} ➜ الصلاحيات: {permissions} ➜ فئة: {category} ➜ وقت الانتظار: {cooldown} ➜ المطور : راكو سان `,
+    "help.commandDetails": ` \n ➜ اسم: {name} \n ➜ اسم مستعار: {aliases} \n ➜ وصف: {description} \n ➜ استعمال: {usage} \n ➜ الصلاحيات: {permissions} \n ➜ فئة: {category} \n ➜ وقت الانتظار: {cooldown} \n ➜ المطور : راكو سان `,
     "0": "عضو",
     "1": "إدارة المجموعة",
     "2": "ادارة البوت",
@@ -60,7 +60,7 @@ async function onCall({ message, args, getLang, userPermissions, prefix }) {
     }
 
     let list = Object.keys(commands)
-      .map(category => `❴ ${category} ❵\n${commands[category].join(" \n↫ ")}`)
+      .map(category => `❀━━━━〖 ${category} 〗━━━━❀ \n${commands[category].join(" \n↫ ")}`)
       .join("\n\n");
 
     message.reply(getLang("help.list", { total: Object.values(commands).map(e => e.length).reduce((a, b) => a + b, 0), list, syntax: prefix }));
