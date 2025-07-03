@@ -1,6 +1,6 @@
 // coded by @renzmansueto. 
 
-const noPrefix = ["ai", "gemini"] //names that does not need a prefix
+const noPrefix = ["مشمش", "مشموش"] //names that does not need a prefix
 
 
 async function onCall(methods) {
