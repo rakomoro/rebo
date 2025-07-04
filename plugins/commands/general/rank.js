@@ -53,11 +53,11 @@ async function makeCard(data) {
         const ctx = canvas.getContext('2d');
 
         ctx.drawImage(template, 0, 0);
-        ctx.drawImage(circledAvatar, 500, 200, 200);
+        ctx.drawImage(circledAvatar, 15, 21, 101, 101);
 
-        ctx.font = 'bold 40px sans-serif';
+        ctx.font = 'bold 20px sans-serif';
         ctx.fillStyle = '#ffffff';
-        ctx.fillText(name, 700, 300);
+        ctx.fillText(name, 136, 43);
 
         ctx.font = 'bold 15px sans-serif';
         ctx.fillStyle = '#ffffff';
