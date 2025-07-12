@@ -12,7 +12,7 @@ export const config = {
 
 const kissPath = join(global.assetsPath, "kiss-template.png");
 export async function onLoad() {
-    global.downloadFile(kissPath, "https://i.imgur.com/T1IZTbG.jpeg");
+    global.downloadFile(kissPath, "https://i.ibb.co/VDrz7Q9/336377253-520155543604186-3362317639442779902-n.png");
 }
 
 export async function makeImage({ one, two }) {
