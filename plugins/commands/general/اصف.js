@@ -26,7 +26,7 @@ async function makeImage(data) {
         const ctx = canvas.getContext('2d');
 
         ctx.drawImage(template, 0, 0);
-        ctx.drawImage(avatarOneCircle, 338, 205, 211, 211);
+        ctx.drawImage(avatarOneCircle, 200, 205, 111, 111);
         ctx.drawImage(avatarTwoCircle, 562, 210, 211, 211);
 
         writeFileSync(savePath, canvas.toBuffer());
