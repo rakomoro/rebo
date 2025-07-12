@@ -40,7 +40,7 @@ async function makeImage(data) {
 const langData = {
     "ar_SY": {
         "missingTarget": "رد على رسالة تونتنك يحب 🤓",
-        "loveMessage": "Together till the end of time <3"
+        "loveMessage": "خش يا صحبي تونه مظه لاكن ～(￣▽￣～)~  <3"
     },
     "vi_VN": {
         "missingTarget": "Vui lòng tag hoặc reply một người dùng",
