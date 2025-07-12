@@ -68,7 +68,7 @@ plugins.events.change_thread_image.reversed_t: "الحماية مفعله وان
 plugins.events.change_thread_image.setNewImage: "\nغير مسموح بتغيير صور المجموعة ولكن نظرًا لعدم وجود صور قديمة ، سيتم استخدام صور جديدة."
 
 plugins.events.subcribe.addSelf: "Bot تمت إضافته إلى المجموعة \"{threadName}\" ({threadId}) من قبل شخص يستخدم \"{authorName}\" ({authorId})."
-plugins.events.subcribe.connected: "❀━━━━〖 مشمش 〗━━━━❀\n\n ✅ تم الاتصال بنجاح \n═══════❍═══════\n\n  اسم البوت  : مشمش \n\n═══════❍═══════\n\n اسم المطور  : صلاح الدين \n\n═══════❍═══════\n\n رابط حساب المطور: https://www.facebook.com/Rako.San.r.s \n\n═══════❍═══════\n\n  {PREFIX}اوامر لرئية اوامر قائمة الاوامر. \n"
+plugins.events.subcribe.connected: "❀━━━━〖 مشمش 〗━━━━❀\n\n ✅ تم الاتصال بنجاح \n\n════════❍════════\n\n  اسم البوت  : مشمش \n\n════════❍════════\n\n اسم المطور  : صلاح الدين \n\n════════❍════════\n\n رابط حساب المطور: https://www.facebook.com/Rako.San.r.s \n\n════════❍════════\n\n  {PREFIX}اوامر لرئية اوامر قائمة الاوامر. \n"
 plugins.events.subcribe.error.createMonitor: "تعذر إنشاء مجموعة مشرفين لهذه المجموعة."
 plugins.events.subcribe.createdMonitor: "المجموعة {threadId} سيتم رصد العمل في هذه المجموعة"
 # plugins.events.subcribe.addMembers: "\"{authorName}\" ({authorId}) اضاف {membersLength} عضو:\n{members}"
