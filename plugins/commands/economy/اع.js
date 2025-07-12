@@ -1,6 +1,10 @@
 import { join } from "path";
 import { loadImage, createCanvas } from "canvas";
+import fs from 'fs';
 
+if (!fs.existsSync(global.cachePath)) {
+  fs.mkdirSync(global.cachePath);
+}
 export const config = {
     name: "اعتقال",
     version: "0.0.1-xaviabot-port-refactor",
