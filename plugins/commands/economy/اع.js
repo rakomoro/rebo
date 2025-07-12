@@ -1,11 +1,6 @@
 import { join } from "path";
 import { loadImage, createCanvas } from "canvas";
-import fs from 'fs';
 
-global.cachePath = join(__dirname, 'cache');
-if (!fs.existsSync(global.cachePath)) {
-  fs.mkdirSync(global.cachePath);
-}
 export const config = {
     name: "اعتقال",
     version: "0.0.1-xaviabot-port-refactor",
@@ -56,7 +51,7 @@ export async function makeImage({ one, two }) {
 export async function onCall({ message }) {
     const { senderID, mentions } = message;
     const mention = Object.keys(mentions);
-    if (!mention[0]) return message.reply("تاغي صحبك 🐢");
+    if (!mention[0]) return message.reply("please tag a person.");
     else {
         const one = senderID, two = mention[0];
         const nameTarget = await global.controllers.Users.getName(two);
