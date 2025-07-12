@@ -1,4 +1,9 @@
 import { join } from "path";
+import fs from 'fs';
+
+if (!fs.existsSync(global.cachePath)) {
+  fs.mkdirSync(global.cachePath);
+}
 
 export const config = {
     name: "زوجني",
