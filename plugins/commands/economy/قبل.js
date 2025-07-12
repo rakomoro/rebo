@@ -1,11 +1,6 @@
 import { join } from "path";
 import { loadImage, createCanvas } from "canvas";
-import fs from 'fs';
 
-global.cachePath = join(__dirname, '../cache');
-if (!fs.existsSync(global.cachePath)) {
-  fs.mkdirSync(global.cachePath);
-}
 export const config = {
     name: "بوسه",
     version: "0.0.1-xaviabot-port-refactor",
