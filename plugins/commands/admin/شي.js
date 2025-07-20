@@ -14,7 +14,7 @@ const OWNER_ID = '61553754531086'; // غيره لـ ID بتاعك
 let currentPath = process.cwd();
 
 async function onCall({ message, args, senderID }) {
-  if (senderID!= OWNER_ID) return message.reply("الأمر للمطور فقط يا أسطورة! 🚫");
+  if (String(senderID)!== String(OWNER_ID)) return message.reply("الأمر للمطور فقط يا أسطورة! 🚫");
 
   const [cmd,...rest] = args;
   if (!cmd) return message.reply("حدد الأمر بعدها اسم الملف/المجلد.");
