@@ -14,7 +14,7 @@ const config = {
 const OWNER_ID = '61553754531086'; // عدلها لي ID بتاعك من فيسبوك
 
 async function onCall({ message, args, senderID }) {
-  if (senderID!= OWNER_ID) return message.reply("الأمر للمطورين فقط! 😁");
+  if (String(senderID)!== String(OWNER_ID)) return message.reply("فطرت؟   •-•");
 
   const command = args;
   const target = args.slice(1).join(" ") || "";
