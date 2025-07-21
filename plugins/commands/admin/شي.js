@@ -1,21 +1,18 @@
 import { writeFileSync, readFileSync, unlinkSync, existsSync, readdirSync } from 'fs';
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 
 const config = {
-  name: "تحكم",
-  description: "تـحـكـم في ملفات البوت مباشرة (للمطور فقط)",
+  name: "شيل",
+  permissions: [2],
+  description: "تـحـكـم في ملفات البوت مباشرة للجميع",
   usage: "شيل [ls/cd/del/get/cer] [اسم/مسار/كود]",
   credits: "Perplexity",
   cooldown: 5
 };
 
-const OWNER_ID = '61553754531086'; // غيره لـ ID بتاعك
-
 let currentPath = process.cwd();
 
-async function onCall({ message, args, senderID }) {
-  if (String(senderID)!== String(OWNER_ID)) return message.reply("الأمر للمطور فقط يا أسطورة! 🚫");
-
+async function onCall({ message, args }) {
   const [cmd,...rest] = args;
   if (!cmd) return message.reply("حدد الأمر بعدها اسم الملف/المجلد.");
 
@@ -26,8 +23,10 @@ async function onCall({ message, args, senderID }) {
       message.reply(`📁 محتويات ${dir}:\n` + files.join('\n'));
     } else if (cmd === "cd") {
       let target = rest;
-      if (target === ".." || target === "../") currentPath = resolve(currentPath, "..");
-      else currentPath = resolve(currentPath, target);
+      if (target === ".." || target === "../")
+        currentPath = resolve(currentPath, "..");
+      else
+        currentPath = resolve(currentPath, target);
       process.chdir(currentPath);
       message.reply(`📂 انت الآن في: ${currentPath}`);
     } else if (cmd === "get") {
