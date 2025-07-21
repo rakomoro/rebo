@@ -3,7 +3,8 @@ import { writeFileSync, readFileSync, unlinkSync, existsSync } from 'fs';
 import { join, resolve } from 'path';
 
 const config = {
-  name: "شيل",
+  name: "تحكم",
+  permissions: [2],
   description: "نفذ أوامر شيل عالسيرفر (للمطور فقط!)",
   usage: "شيل [ls/cd/del/get/cer] [مسار/اسم]",
   credits: "Perplexity",
@@ -11,10 +12,10 @@ const config = {
 };
 
 // لتحديد المطور فقط (اكتب ID بتاعك!!)
-const OWNER_ID = '61553754531086'; // عدلها لي ID بتاعك من فيسبوك
+//const OWNER_ID = '61553754531086'; // عدلها لي ID بتاعك من فيسبوك
 
 async function onCall({ message, args, senderID }) {
-  if (String(senderID)!== String(OWNER_ID)) return message.reply("فطرت؟   •-•");
+  //if (String(senderID)!== String(OWNER_ID)) return message.reply("فطرت؟   •-•");
 
   const command = args;
   const target = args.slice(1).join(" ") || "";
