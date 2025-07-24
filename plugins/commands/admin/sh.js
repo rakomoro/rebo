@@ -1,68 +1,70 @@
-import { exec } from 'child_process';
-import { writeFileSync, readFileSync, unlinkSync, existsSync } from 'fs';
-import { join, resolve } from 'path';
+import { readdirSync, statSync, unlinkSync, existsSync, readFileSync } from "fs";
+import { join, resolve } from "path";
+
+const dirs = {}; // لكل محادثة مجلد خاص
 
 const config = {
-  name: "تحكم",
+  name: "كمد",
   permissions: [2],
-  description: "نفذ أوامر شيل عالسيرفر (للمطور فقط!)",
-  usage: "شيل [ls/cd/del/get/cer] [مسار/اسم]",
-  credits: "Perplexity",
+  description: "أوامر إدارة داخلية للملفات أو البيئة",
+  usage: "[ls/cd/del/cer/get] [path]",
+  credits: "Copilot & Xavia",
   cooldown: 5
 };
 
-// لتحديد المطور فقط (اكتب ID بتاعك!!)
-//const OWNER_ID = '61553754531086'; // عدلها لي ID بتاعك من فيسبوك
+async function onCall({ message, args }) {
+  const { threadID } = message;
+  const command = args?.toLowerCase();
+  const target = args.slice(1).join(" ");
 
-async function onCall({ message, args, senderID }) {
-  //if (String(senderID)!== String(OWNER_ID)) return message.reply("فطرت؟   •-•");
+  if (!dirs[threadID]) dirs[threadID] = process.cwd();
+  let currentDir = dirs[threadID];
 
-  const command = args;
-  const target = args.slice(1).join(" ") || "";
-
-  // حماية أساسية
-  if (/rm\s+-rf\s+\/|del\s+C:\/|rm\s+-rf\s+\./.test(target)) {
-    return message.reply("عايز تمسح الدنيا كلها؟ مستحيل! 😜");
+  function safePath(pathInput) {
+    return resolve(currentDir, pathInput || ".");
   }
 
-  let cwd = process.cwd();
-
   try {
-    if (command === "ls") {
-      exec(`ls ${target}`, { cwd }, (err, stdout, stderr) => {
-        if (err) return message.reply(`😅 خطأ: ${stderr}`);
-        message.reply(`📁 محتوى المجلد:\n${stdout}`);
-      });
-    } else if (command === "cd") {
-      let newDir = resolve(cwd, target);
-      process.chdir(newDir);
-      message.reply(`📂 تم التحويل إلى: ${newDir}`);
-    } else if (command === "del") {
-      if (!existsSync(target)) return message.reply("😕 الملف أو المجلد غير موجود!");
-      unlinkSync(target);
-      message.reply(`🗑️ تم حذف ${target} بنجاح!`);
-    } else if (command === "get") {
-      if (!existsSync(target)) return message.reply("💾 مافي ملف بهذا الاسم!");
-      message.reply({
-        body: "🎉 الملف وصل:",
-        attachment: readFileSync(target)
-      });
-    } else if (command === "cer") {
-      // جنّنك بشهادة فاضية مضروبة
-      writeFileSync('cert.txt', "شهادة أسطورة الشيل مُنحت لمطور Xavia 🔥");
-      message.reply({
-        body: "🎓 خذ شهادتك يا زول!",
-        attachment: readFileSync('cert.txt')
-      });
-    } else {
-      message.reply("❓ الأوامر المدعومة: ls, cd, del, get, cer");
+    switch (command) {
+      case "ls": {
+        const pathToList = target? safePath(target): currentDir;
+        if (!existsSync(pathToList)) return message.reply("📁 المسار غير موجود.");
+        const files = readdirSync(pathToList);
+        return message.reply(`📂 المحتويات:\n${files.join("\n")}`);
+      }
+      case "cd": {
+        const pathToCheck = safePath(target);
+        if (!existsSync(pathToCheck) ||!statSync(pathToCheck).isDirectory()) {
+          return message.reply("❌ المجلد غير صالح أو غير موجود.");
+        }
+        dirs[threadID] = pathToCheck;
+        return message.reply(`✅ تم تغيير المجلد إلى:\n${pathToCheck}`);
+      }
+      case "del": {
+        const fileToDelete = safePath(target);
+        if (!existsSync(fileToDelete)) return message.reply("🗑️ الملف غير موجود.");
+        unlinkSync(fileToDelete);
+        return message.reply(`✅ تم حذف الملف: ${target}`);
+      }
+      case "get": {
+        const fileToRead = safePath(target);
+        if (!existsSync(fileToRead)) return message.reply("📄 الملف غير موجود.");
+        const content = readFileSync(fileToRead, "utf-8");
+        return message.reply(`📄 محتوى الملف:\n${content.slice(0, 1500)}`);
+      }
+      case "cer": {
+        return message.reply(`📜 تفاصيل البيئة:\nNode: ${process.version}\nPlatform: ${process.platform}\nMemory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`);
+      }
+      default:
+        return message.reply("❓ الأمر غير معروف. استخدم: ls, cd, del, get, cer");
     }
-  } catch (e) {
-    message.reply(`💥 في خطأ: ${e.message}`);
+  } catch (err) {
+    console.error("Shell error:", err);
+    return message.reply("❌ حدث خطأ أثناء تنفيذ الأمر.");
   }
 }
 
 export default {
   config,
   onCall
-}
+};
